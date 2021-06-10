@@ -7,6 +7,7 @@ import Header from '../../components/header/header'
 import Loading from '../../components/loading/loading'
 const Home = lazy(() => import('../home/home'))
 const Products = lazy(() => import('../products/products'))
+const Category = lazy(() => import('../products/category/category'))
 const Role = lazy(() => import('../role/role'))
 const User = lazy(() => import('../user/user'))
 const Bar = lazy(() => import('../charts/bar/bar'))
@@ -32,6 +33,7 @@ export default class Admin extends Component {
               <Switch>
                 <Route path="/home" component={Home}></Route>
                 <Route path="/products" component={Products}></Route>
+                <Route path="/category" component={Category}></Route>
                 <Route path="/role" component={Role}></Route>
                 <Route path="/user" component={User}></Route>
                 <Route path="/bar" component={Bar}></Route>
