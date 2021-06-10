@@ -1,0 +1,98 @@
+html,
+body,
+div,
+p,
+span,
+i,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea,
+a,
+dl,
+dt,
+dd,
+form,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+html,body,#root {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  overflow-x: hidden;
+  font-family: "microsoft yahei";
+}
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+i,
+em {
+  font-style: normal;
+}
+
+img {
+  border: none;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+.clear:after {
+  content: "";
+  display: block;
+  clear: both;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.l {
+  float: left;
+}
+
+.r {
+  float: right;
+}
+
+.e {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.line3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
