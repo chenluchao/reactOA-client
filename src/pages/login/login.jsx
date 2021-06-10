@@ -1,20 +1,34 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
 import './login.less'
 // 登录路由组件
 import LoginIcon from '../../assets/images/logo.png'
-import {reqLogin} from '../../api'
+import { reqLogin } from '../../api'
+import { Redirect } from 'react-router'
 export default class Login extends Component {
   onFinish = async (values) => {
     try {
-      let res = await reqLogin(values)
-      console.log(res)
+      const { status, data, msg } = await reqLogin(values)
+      if (status === 0) {
+        message.success('登录成功')
+        memoryUtils.user = data
+        storageUtils.saveUser(data)
+        this.props.history.replace('/')
+      } else {
+        message.error(msg)
+      }
     } catch (error) {
       console.log(error)
     }
   }
   render() {
+    const {user} = memoryUtils
+    if(user._id){
+      return <Redirect to='/'/>
+    }
     return (
       <div className="LoginPage">
         <div className="header">
