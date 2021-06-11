@@ -32,13 +32,13 @@ export default class Admin extends Component {
             <Suspense fallback={<Loading />}>
               <Switch>
                 <Route path="/home" component={Home}></Route>
-                <Route path="/products" component={Products}></Route>
+                <Route path="/product" component={Products}></Route>
                 <Route path="/category" component={Category}></Route>
                 <Route path="/role" component={Role}></Route>
                 <Route path="/user" component={User}></Route>
-                <Route path="/bar" component={Bar}></Route>
-                <Route path="/line" component={Line}></Route>
-                <Route path="/pie" component={Pie}></Route>
+                <Route path="/charts/bar" component={Bar}></Route>
+                <Route path="/charts/line" component={Line}></Route>
+                <Route path="/charts/pie" component={Pie}></Route>
                 <Redirect to="/home"></Redirect>
               </Switch>
             </Suspense>
