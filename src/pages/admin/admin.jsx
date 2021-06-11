@@ -28,7 +28,7 @@ export default class Admin extends Component {
         </Sider>
         <Layout>
           <Header>Header</Header>
-          <Content style={{ backgroundColor: '#fff' }}>
+          <Content style={{ backgroundColor: '#fff',margin:'20px 20px 0 20px' }}>
             <Suspense fallback={<Loading />}>
               <Switch>
                 <Route path="/home" component={Home}></Route>
@@ -43,7 +43,7 @@ export default class Admin extends Component {
               </Switch>
             </Suspense>
           </Content>
-          <Footer style={{ textAlign: 'center', color: '#aaa' }}>
+          <Footer style={{ textAlign: 'center', color: '#aaa'}}>
             建议使用Chrom浏览器进行浏览
           </Footer>
         </Layout>
