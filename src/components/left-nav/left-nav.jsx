@@ -1,75 +1,77 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { Menu } from 'antd'
-import {
-  HomeOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  AreaChartOutlined,
-  SafetyCertificateOutlined,
-  BarChartOutlined,
-  LineChartOutlined,
-  PieChartOutlined,
-  ShoppingOutlined,
-  ApartmentOutlined,
-} from '@ant-design/icons'
+import * as Icon from '@ant-design/icons'
 import './index.less'
+import menuList from '../../config/menuConfig'
 import Logo from '../../assets/images/logo.png'
 const { SubMenu } = Menu
-export default class LeftNav extends Component {
+class LeftNav extends Component {
+  getMenuListDOM_map = (menuList) => {
+    return menuList.map((item) => {
+      const icon = React.createElement(Icon[item.icon], {
+        style: { fontSize: '16px' },
+      })
+      if (!item.children) {
+        //无二级子路由
+        return (
+          <Menu.Item key={item.key} icon={icon}>
+            <Link to={item.key}>{item.title}</Link>
+          </Menu.Item>
+        )
+      } else {
+        //有子路由
+        return (
+          <SubMenu key={item.key} icon={icon} title={item.title}>
+            {this.getMenuListDOM_map(item.children)}
+          </SubMenu>
+        )
+      }
+    })
+  }
+  getMenuListDOM = (menuList) => {
+    return menuList.reduce((pre, item) => {
+      const icon = React.createElement(Icon[item.icon], {
+        style: { fontSize: '16px' },
+      })
+      if (!item.children) {
+        // 无子路由
+        pre.push(
+          <Menu.Item key={item.key} icon={icon}>
+            <Link to={item.key}>{item.title}</Link>
+          </Menu.Item>
+        )
+      } else {
+        const currentPath = this.props.location.pathname
+        const cItem = item.children.find((cItem) => cItem.key === currentPath)
+        if(cItem){
+          this.openKey = item.key
+        }
+        pre.push(
+          <SubMenu key={item.key} icon={icon} title={item.title}>
+            {this.getMenuListDOM(item.children)}
+          </SubMenu>
+        )
+      }
+      return pre
+    }, [])
+  }
+  UNSAFE_componentWillMount(){
+    this.menuListDOM = this.getMenuListDOM(menuList)
+  }
   render() {
+    const currentPath = this.props.location.pathname
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-logo">
           <img src={Logo} alt="logo" />
           <span>后台管理</span>
         </Link>
-        <Menu mode="inline" theme="dark">
-          <Menu.Item key="1" icon={<HomeOutlined />}>
-            <Link to="/home">首页</Link>
-          </Menu.Item>
-          <SubMenu key="sub1" icon={<AppstoreOutlined />} title="商品">
-            <Menu.Item key="2">
-              <Link to="/category">
-                <ApartmentOutlined />
-                <span>品类管理</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <Link to="/products">
-                <ShoppingOutlined />
-                <span>商品管理</span>
-              </Link>
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="4" icon={<TeamOutlined />}>
-            <Link to="/user">用户管理</Link>
-          </Menu.Item>
-          <Menu.Item key="5" icon={<SafetyCertificateOutlined />}>
-          <Link to="/role">角色管理</Link>
-          </Menu.Item>
-          <SubMenu key="sub2" icon={<AreaChartOutlined />} title="图形图表">
-            <Menu.Item key="6">
-              <Link to="/bar">
-                <BarChartOutlined />
-                <span>柱形图</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="7">
-              <Link to="/line">
-                <LineChartOutlined />
-                <span>折线图</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="8">
-              <Link to="/pie">
-                <PieChartOutlined />
-                <span>饼状图</span>
-              </Link>
-            </Menu.Item>
-          </SubMenu>
+        <Menu mode="inline" theme="dark" selectedKeys={[currentPath]} defaultOpenKeys={[this.openKey]}>
+          {this.menuListDOM}
         </Menu>
       </div>
     )
   }
 }
+export default withRouter(LeftNav)
