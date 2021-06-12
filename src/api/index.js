@@ -5,10 +5,10 @@ import service from './ajax'
 import jsonp from 'jsonp'
 import {message} from 'antd';
 
-const base_URL = ''
+const base_URL = '/manage'
 // 登录
 export function reqLogin(data) {
-  return service.post(base_URL + '/login', data)
+  return service.post('/login', data)
 }
 // jsonp跨域请求天气数据
 export const reqWeather = (city) => {
@@ -23,4 +23,12 @@ export const reqWeather = (city) => {
       }
     })
   })
+}
+// 获取分类列表数据
+export function reqCategory() {
+  return service.get(base_URL + '/category/list')
+}
+// 添加商品分类
+export function reqAddCategory(data) {
+  return service.post(base_URL + '/category/add', data)
 }
