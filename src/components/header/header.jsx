@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Modal, Button } from 'antd'
+import { Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import './index.less'
 import memoryUtils from '../../utils/memoryUtils'
@@ -8,6 +8,7 @@ import menuList from '../../config/menuConfig'
 import storageUtils from '../../utils/storageUtils'
 import { formateDate } from '../../utils/dateUtils'
 import {reqWeather} from '../../api'
+import LinkButton from '../../components/link-button/link-button'
 const { confirm } = Modal
 class Header extends Component {
   state = {
@@ -66,13 +67,13 @@ class Header extends Component {
   }
   componentDidMount() {
     // 启动定时器实时获取时间
-    this.showTime()
+    // this.showTime()
     // 获取天气
     this.getWeather('北京')
   }
   componentWillUnmount(){
     // 销毁前清除定时器
-    clearInterval(this.DateTime)
+    // clearInterval(this.DateTime)
   }
   render() {
     const { user } = memoryUtils
@@ -82,7 +83,7 @@ class Header extends Component {
       <div className="header">
         <div className="header-top">
           <span>欢迎，{user.username}</span>
-          <Button onClick={this.logout} type="text" danger>退出</Button>
+          <LinkButton onClick={this.logout} type="text" danger children={'退出'}></LinkButton>
         </div>
         <div className="header-bottom">
           <div className="path-name">{title}</div>
