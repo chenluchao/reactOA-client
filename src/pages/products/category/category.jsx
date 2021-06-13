@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { Card, Table, Button, message, Modal, Input } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Card, Table, Button, message, Modal, Input, Form, Select } from 'antd'
+import { PlusOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import LinkButton from '../../../components/link-button/link-button'
-import { reqCategory } from '../../../api'
+import { reqCategory, reqUpdateCategory,reqAddCategory } from '../../../api'
 import './index.less'
+const { Option } = Select
 export default class Category extends Component {
   state = {
     categoryList: [], //一级分类列表
+    childCateList: [],
     columns: [
       {
         title: '分类的名称',
@@ -24,58 +26,123 @@ export default class Category extends Component {
               onClick={() => this.changeCate(category)}
               children={'修改分类'}
             ></LinkButton>
+            {this.state.parentId === 0 ? (
+              <LinkButton
+                type="link"
+                onClick={() => this.showCategory(category)}
+                children={'查看二级分类'}
+              ></LinkButton>
+            ) : null}
           </span>
         ),
       },
     ],
     loading: true,
-    showModal: false,
-    ModalTitle: '',
-    inputValue: '',
-    modalType: null, //0-添加1-修改
+    showModalType: 0, //1-修改弹窗2-添加弹窗
+    parentId: 0,
+  }
+  updateform = React.createRef()
+  addform = React.createRef()
+  // 查看二级分类
+  showCategory = (category) => {
+    this.ChildCate = category
+    this.setState({
+      parentId: category._id,
+    })
+    this.getCategoryList(category._id)
   }
   // 添加分类
   addCategory = () => {
-    this.toggleShowModal(true, '添加分类', 0)
+    this.setState(
+      {
+        showModalType: 2,
+      },
+      () => {
+        this.addform.current.resetFields()
+      }
+    )
   }
   // 修改分类
   changeCate = (category) => {
-    this.toggleShowModal(true, '修改分类', 1)
-    this.setState({
-      inputValue: category.name,
-    })
+    this.category = category
+    this.setState(
+      {
+        showModalType: 1,
+      },
+      () => {
+        this.updateform.current.resetFields()
+      }
+    )
   }
-  toggleShowModal = (type, title = '', modalType = null) => {
-    this.setState({
-      showModal: type,
-      ModalTitle: title,
-      modalType: modalType,
-    })
-  }
-  // modal确认回调
+  // modal修改目录确认回调
   handleOk = () => {
-    
+    this.updateform.current.validateFields().then(async (values) => {
+      let dist = {
+        categoryId: this.category._id,
+        categoryName: values.name,
+      }
+      let res = await reqUpdateCategory(dist)
+      if (res.status === 0) {
+        message.success('修改成功！')
+        this.getCategoryList(this.state.parentId)
+        this.handleCancel()
+      } else {
+        message.error('修改失败！')
+      }
+    })
+  }
+  // modal添加目录确认回调
+  handleAddOk=()=>{
+    this.addform.current.validateFields().then(async(values)=>{
+      let dist = {
+        parentId:values.parentId,
+        categoryName:values.name
+      }
+      let res = await reqAddCategory(dist)
+      if(res.status===0){
+        message.success('添加分类成功！')
+        this.getCategoryList(this.state.parentId)
+        this.handleCancel()
+      }else{
+        message.error('添加分类失败！')
+      }
+    })
   }
   // modal取消回调
   handleCancel = () => {
-    this.toggleShowModal(false)
     this.setState({
-      inputValue: '',
+      showModalType: 0,
     })
   }
   // 获取分类数据
-  getCategoryList = async () => {
-    const categoryList = await reqCategory()
+  getCategoryList = async (parentId = 0) => {
+    let dist = {
+      parentId,
+    }
+    const categoryList = await reqCategory(dist)
     this.setState({
       loading: false,
     })
     if (categoryList.status === 0) {
-      this.setState({
-        categoryList: categoryList.data,
-      })
+      if (parentId === 0) {
+        this.setState({
+          categoryList: categoryList.data,
+        })
+      } else {
+        this.setState({
+          childCateList: categoryList.data,
+        })
+      }
     } else {
       message.error('获取分类数据失败！')
     }
+  }
+  // 返回一级列表
+  backCateList = () => {
+    this.setState({
+      parentId: 0,
+    })
+    this.getCategoryList(0)
   }
   componentDidMount() {
     this.getCategoryList()
@@ -85,11 +152,23 @@ export default class Category extends Component {
       categoryList,
       columns,
       loading,
-      showModal,
-      ModalTitle,
-      inputValue,
+      showModalType,
+      parentId,
+      childCateList,
     } = this.state
-    const title = '一级分类列表'
+    const name = this.category ? this.category.name : ''
+    const title =
+      parentId === 0 ? (
+        '一级分类'
+      ) : (
+        <span>
+          <span onClick={this.backCateList} style={{ cursor: 'pointer' }}>
+            一级分类列表
+          </span>
+          <ArrowRightOutlined style={{ margin: '0 10px' }} />
+          <span>{this.ChildCate.name}</span>
+        </span>
+      )
     const extra = (
       <Button type="primary" onClick={this.addCategory}>
         <PlusOutlined />
@@ -104,7 +183,7 @@ export default class Category extends Component {
             scroll={{ x: '100%' }}
             rowKey="_id"
             bordered={true}
-            dataSource={categoryList}
+            dataSource={parentId === 0 ? categoryList : childCateList}
             columns={columns}
             pagination={{
               pageSize: 6,
@@ -112,14 +191,71 @@ export default class Category extends Component {
           />
         </Card>
         <Modal
-          title={ModalTitle}
-          visible={showModal}
+          title="修改分类"
+          visible={showModalType === 1}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          <p>
-            <Input value={inputValue} />
-          </p>
+          <Form
+            ref={this.updateform}
+            name="update-category"
+            initialValues={{
+              name,
+            }}
+          >
+            <Form.Item
+              name="name"
+              rules={[
+                { required: true, message: 'Please input your category name!' },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="添加分类"
+          visible={showModalType === 2}
+          onOk={this.handleAddOk}
+          onCancel={this.handleCancel}
+        >
+          <Form
+            ref={this.addform}
+            name="add-category"
+            initialValues={{
+              parentId: '0',
+            }}
+          >
+            <Form.Item
+              name="parentId"
+              label="上级目录"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your parent category !',
+                },
+              ]}
+            >
+              <Select defaultValue="0" style={{ width: '100%' }}>
+                <Option value="0">一级分类</Option>
+                {categoryList.map((item) => {
+                  return <Option value={item._id}>{item.name}</Option>
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="目录名称"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your new category name!',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
         </Modal>
       </>
     )

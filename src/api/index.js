@@ -1,14 +1,14 @@
 /* 
   包含应用中所有接口请求函数的模块
 */
-import service from './ajax'
+import ajax from './ajax'
 import jsonp from 'jsonp'
 import {message} from 'antd';
 
 const base_URL = '/manage'
 // 登录
 export function reqLogin(data) {
-  return service.post('/login', data)
+  return ajax('/login', data,'POST')
 }
 // jsonp跨域请求天气数据
 export const reqWeather = (city) => {
@@ -25,10 +25,14 @@ export const reqWeather = (city) => {
   })
 }
 // 获取分类列表数据
-export function reqCategory() {
-  return service.get(base_URL + '/category/list')
+export function reqCategory(data) {
+  return ajax(base_URL + '/category/list',data)
 }
 // 添加商品分类
 export function reqAddCategory(data) {
-  return service.post(base_URL + '/category/add', data)
+  return ajax(base_URL + '/category/add', data,'POST')
+}
+// 更新分类
+export function reqUpdateCategory(data) {
+  return ajax(base_URL + '/category/update', data,'POST')
 }

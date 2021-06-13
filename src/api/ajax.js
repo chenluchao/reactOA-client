@@ -1,37 +1,41 @@
-/* 
-封装的能发ajax请求的函数, 向外暴露的本质是axios
-1. 解决post请求携带参数的问题: 默认是json, 需要转换成urlencode格式
-2. 让请求成功的结果不再是response, 而是response.data的值
-3. 统一处理所有请求的异常错误
-*/
-import axios from 'axios';
-import qs from 'qs';
-import { message } from 'antd';
-
-const service = axios.create({});
-
-// 添加请求拦截器: 让post请求的请求体格式为urlencoded格式 a=1&b2
-// 在真正发请求前执行
-service.interceptors.request.use(function (config) {
-    // 得到请求方式和请求体数据
-    const { method, data } = config
-    // 处理post请求, 将data对象转换成query参数格式字符串
-    if (method.toLowerCase() === 'post' && typeof data === 'object') {
-        config.data = qs.stringify(data) // username=admin&password=admin
-    }
-    return config
-});
-
-// 添加响应拦截器
-// 功能1: 让请求成功的结果不再是response, 而是response.data的值
-// 功能2: 统一处理所有请求的异常错误
-// 在请求返回之后且在我们指定的请求响应回调函数之前
-service.interceptors.response.use(function (response) {
-    return response.data//返回的结果就会给我们指定的请求响应的回调
-}, function (error) {// 统一处理所有请求的异常错误
-    message.error('请求出错' + error.message)
-    //返回一个pending状态的promise，中断promise链
-    return new Promise(() => { })
-})
-
-export default service
+/*
+    能发送异步ajax请求的函数模块
+      封装axios库
+    函数的返回值是promise对象
+    1. 优化1: 统一处理请求异常?
+        在外层包一个自己创建的promise对象
+        在请求出错时, 不reject(error), 而是显示错误提示
+    2. 优化2: 异步得到不是reponse, 而是response.data
+       在请求成功resolve时: resolve(response.data)
+ */
+       import axios from 'axios'
+       import  { message } from 'antd'
+       
+       const ajax = (url, data={}, method='GET') => {
+           return new Promise(function (resolve, reject) {
+               let promise
+               // 执行异步ajax请求
+               if(method === 'GET') {
+                   promise = axios.get(url, {
+                       params: data
+                   })
+               } else {
+                   promise = axios.post(url, data)
+               }
+       
+               promise.then(response => {
+                   // 如果成功了, 调用 resolve(response.data)
+                   resolve(response.data)
+                   // 3. 如果失败了, 不调用reject(reason), 而是提示异常信息
+               }).catch(error => {
+                   message.error('请求错误：' + error.message)
+               })
+           })
+       
+       }
+       
+       export default ajax
+       // 请求登陆接口
+       // ajax('/login', {username: 'Tom', passsword: '12345'}, 'POST').then()
+       // 添加用户
+       // ajax('/manage/user/add', {username: 'Tom', passsword: '12345', phone: '13712341234'}, 'POST').then()
