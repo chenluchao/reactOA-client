@@ -6,7 +6,7 @@ import LeftNav from '../../components/left-nav/left-nav'
 import Header from '../../components/header/header'
 import Loading from '../../components/loading/loading'
 const Home = lazy(() => import('../home/home'))
-const Products = lazy(() => import('../products/products'))
+const Products = lazy(() => import('../products/product/products'))
 const Category = lazy(() => import('../products/category/category'))
 const Role = lazy(() => import('../role/role'))
 const User = lazy(() => import('../user/user'))

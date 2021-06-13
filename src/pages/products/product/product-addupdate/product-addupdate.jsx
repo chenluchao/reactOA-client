@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import './index.less'
-
-export default class Products extends Component {
+export default class AddUpdate extends Component {
   render() {
     return (
       <div>
-        Products
+        AddUpdate
       </div>
     )
   }
