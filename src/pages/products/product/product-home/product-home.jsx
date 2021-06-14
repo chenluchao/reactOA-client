@@ -9,17 +9,17 @@ export default class ProductHome extends Component {
       {
         _id: '1',
         name: '华硕笔记本电脑',
-        message: '轻薄本，I9处理器，1024G固态内存——笔记本中的战斗机',
+        desc: '轻薄本，I9处理器，1024G固态内存——笔记本中的战斗机',
         price: '7245',
-        status: '0',
+        status: '1',
       },
       {
         _id: '2',
         name: '华为MakeBook14笔记本电脑',
-        message:
+        desc:
           '轻薄本，I7处理器，触摸屏，256G固态内存——满满黑科技,您的最佳办公笔记本',
         price: '6540',
-        status: '1',
+        status: '0',
       },
     ], //表格数据
     columns: [
@@ -31,8 +31,8 @@ export default class ProductHome extends Component {
       },
       {
         title: '商品描述',
-        dataIndex: 'message',
-        key: 'message',
+        dataIndex: 'desc',
+        key: 'desc',
         width: 450,
       },
       {
@@ -52,8 +52,8 @@ export default class ProductHome extends Component {
         render: (status) => {
           return (
             <>
-              <Button type='primary' danger={status==='0'?true:false} onClick={()=>this.changeStatus(status)}>{status==='0'?'下架':'上架'}</Button>
-              <span style={{ margin: '0 10px',color:status==='0'?'#03ccbb':'#d9363e' }}>{status==='0'?'在售':'已下架'}</span>
+              <Button type='primary' danger={status==='1'?true:false} onClick={()=>this.changeStatus(status)}>{status==='1'?'下架':'上架'}</Button>
+              <span style={{ margin: '0 10px',color:status==='1'?'#03ccbb':'#d9363e' }}>{status==='1'?'在售':'已下架'}</span>
             </>
           )
         },
