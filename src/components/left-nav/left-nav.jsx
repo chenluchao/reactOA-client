@@ -43,8 +43,12 @@ class LeftNav extends Component {
         )
       } else {
         const currentPath = this.props.location.pathname
+        // if解决/product/detail类似三级路由相关nav不展开问题
+        if (currentPath.indexOf('/product') > -1) {
+          this.openKey='/products'
+        }
         const cItem = item.children.find((cItem) => cItem.key === currentPath)
-        if(cItem){
+        if (cItem) {
           this.openKey = item.key
         }
         pre.push(
@@ -56,18 +60,31 @@ class LeftNav extends Component {
       return pre
     }, [])
   }
-  UNSAFE_componentWillMount(){
+  setDefaultSelect = () => {
+    let path = this.props.location.pathname
+    // 解决/product/detail类似三级路由nav不激活问题
+    if (path.indexOf('/product') > -1) {
+      path='/product'
+    }
+    return path
+  }
+  UNSAFE_componentWillMount() {
     this.menuListDOM = this.getMenuListDOM(menuList)
   }
   render() {
-    const currentPath = this.props.location.pathname
+    const currentPath = this.setDefaultSelect()
     return (
       <div className="left-nav">
         <Link to="/" className="left-nav-logo">
           <img src={Logo} alt="logo" />
           <span>后台管理</span>
         </Link>
-        <Menu mode="inline" theme="dark" selectedKeys={[currentPath]} defaultOpenKeys={[this.openKey]}>
+        <Menu
+          mode="inline"
+          theme="dark"
+          selectedKeys={[currentPath]}
+          defaultOpenKeys={[this.openKey]}
+        >
           {this.menuListDOM}
         </Menu>
       </div>
