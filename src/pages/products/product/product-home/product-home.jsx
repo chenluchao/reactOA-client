@@ -96,6 +96,7 @@ export default class ProductHome extends Component {
     showSearch: false, //搜索视图
     searchType: '0', //搜索类型0-按名称搜索、1-按描述搜索
     searchCon: '', //搜索关键字
+    loading:false//表格数据加载状态
   }
   // 点击搜索按钮回调
   dealSearch = (values) => {
@@ -123,6 +124,9 @@ export default class ProductHome extends Component {
     }
   }
   doSearch = async () => {
+    this.setState({
+      loading:true
+    })
     let dist = {
       pageNum: this.state.pageNum,
       pageSize: this.state.pageSize,
@@ -135,6 +139,9 @@ export default class ProductHome extends Component {
       dist.productDesc = this.state.searchCon
     }
     let res = await reqSearchProducts(dist)
+    this.setState({
+      loading:false
+    })
     if (res.status === 0) {
       this.setState({
         total: res.data.total,
@@ -196,8 +203,14 @@ export default class ProductHome extends Component {
     debugger
   }
   getProductsData = async () => {
+    this.setState({
+      loading:true
+    })
     const { pageNum, pageSize } = this.state
     let res = await reqProducts({ pageNum, pageSize })
+    this.setState({
+      loading:false
+    })
     if (res.status === 0) {
       this.setState({
         total: res.data.total,
@@ -228,7 +241,7 @@ export default class ProductHome extends Component {
     this.getProductsData()
   }
   render() {
-    const { dataSource, columns, pageNum, total } = this.state
+    const { dataSource, columns, pageNum, total,loading } = this.state
     const HeaderLeft = (
       <Form
         name="search"
@@ -263,6 +276,7 @@ export default class ProductHome extends Component {
     return (
       <Card title={HeaderLeft} extra={extra} style={{ width: '100%' }}>
         <Table
+        loading={loading}
           bordered={true}
           rowKey="_id"
           dataSource={dataSource}
