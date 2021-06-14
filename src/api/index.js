@@ -36,3 +36,15 @@ export function reqAddCategory(data) {
 export function reqUpdateCategory(data) {
   return ajax(base_URL + '/category/update', data,'POST')
 }
+// 获取商品分页数据
+export function reqProducts(data) {
+  return ajax(base_URL + '/product/list',data)
+}
+// 上架/下架
+export function reqUpdateStatus(data) {
+  return ajax(base_URL + '/product/updateStatus',data,'POST')
+}
+// 搜索商品
+export function reqSearchProducts(data) {
+  return ajax(base_URL + '/product/search',data)
+}
