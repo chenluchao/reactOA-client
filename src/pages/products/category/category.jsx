@@ -14,11 +14,11 @@ export default class Category extends Component {
         title: '分类的名称',
         dataIndex: 'name',
         key: 'name',
-        width: 900,
+        width: '60%',
       },
       {
         title: '操作',
-        with: 300,
+        with: '40%',
         render: (category) => (
           <span>
             <LinkButton

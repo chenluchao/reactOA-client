@@ -27,19 +27,19 @@ export default class ProductHome extends Component {
         title: '商品名称',
         dataIndex: 'name',
         key: 'name',
-        width: 200,
+        width: '12%',
       },
       {
         title: '商品描述',
         dataIndex: 'desc',
         key: 'desc',
-        width: 450,
+        width: '56%',
       },
       {
         title: '价格',
         dataIndex: 'price',
         key: 'price',
-        width: 150,
+        width: '8%',
         render: (values) => {
           return <span style={{ color: 'red' }}>￥ {values}</span>
         },
@@ -48,7 +48,7 @@ export default class ProductHome extends Component {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        width: 160,
+        width: '12%',
         render: (status, product) => {
           return (
             <>
@@ -73,7 +73,7 @@ export default class ProductHome extends Component {
       },
       {
         title: '操作',
-        with: 100,
+        with: '12%',
         render: (product) => (
           <span>
             <Button type="link" onClick={() => this.showDetail(product)}>
