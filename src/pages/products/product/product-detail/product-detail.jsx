@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Button, List } from 'antd'
-import { LeftCircleOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import './index.less'
 export default class Detail extends Component {
   state = {
@@ -43,10 +43,10 @@ export default class Detail extends Component {
         <Button
           style={{ fontSize: '18px' }}
           type="link"
-          icon={<LeftCircleOutlined />}
+          icon={<ArrowLeftOutlined />}
           onClick={this.goBack}
         >
-          返回
+          商品详情
         </Button>
       </>
     )
