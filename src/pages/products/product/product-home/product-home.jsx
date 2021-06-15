@@ -196,7 +196,7 @@ export default class ProductHome extends Component {
   }
   // 点击详情按钮回调
   showDetail = (product) => {
-    debugger
+    this.props.history.push('/product/detail',product)
   }
   // 点击修改按钮回调
   updateProduct = (product) => {
