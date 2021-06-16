@@ -202,7 +202,7 @@ export default class ProductHome extends Component {
   }
   // 点击修改按钮回调
   updateProduct = (product) => {
-    debugger
+    this.props.history.push('/product/addupdate',product)
   }
   getProductsData = async () => {
     this.setState({

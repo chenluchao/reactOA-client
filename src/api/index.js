@@ -52,3 +52,7 @@ export function reqSearchProducts(data) {
 export function reqDeleteImg(data) {
   return ajax('/manage/img/delete', data, 'POST')
 }
+// 添加商品
+export function reqAddProduct(data) {
+  return ajax(base_URL + '/product/add', data, 'POST')
+}

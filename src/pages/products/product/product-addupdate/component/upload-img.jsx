@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { message, Upload, Modal } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { reqDeleteImg } from '../../../../../api'
+import { BASE_IMG_URL } from '../../../../../utils/constants'
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -62,6 +63,21 @@ export default class UploadImg extends Component {
    */
   getImgs = () => {
     return this.state.fileList.map((file) => file.name)
+  }
+  componentDidMount() {
+    let fileList = []
+    const { imgs } = this.props
+    if (imgs && imgs.length > 0) {
+      fileList = imgs.map((img, index) => ({
+        uid: -index, // 每个file都有自己唯一的id
+        name: img, // 图片文件名
+        status: 'done', // 图片状态: done-已上传, uploading: 正在上传中, removed: 已删除
+        url: BASE_IMG_URL + img,
+      }))
+    }
+    this.setState({
+      fileList,
+    })
   }
   render() {
     const { previewVisible, previewImage, fileList } = this.state
