@@ -57,6 +57,12 @@ export default class RichTextEditor extends Component {
       })
     })
   }
+  clear = () => {
+    // 置空数据
+    this.setState({
+      editorState: EditorState.createEmpty(),
+    })
+  }
   getDetail = () => {
     // 返回输入数据对应的html格式的文本
     return draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))

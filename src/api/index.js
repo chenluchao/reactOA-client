@@ -56,3 +56,7 @@ export function reqDeleteImg(data) {
 export function reqAddProduct(data) {
   return ajax(base_URL + '/product/add', data, 'POST')
 }
+// 更新商品
+export function reqUpdateProduct(data) {
+  return ajax(base_URL + '/product/update', data, 'POST')
+}

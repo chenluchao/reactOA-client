@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Form, Input, Button, Cascader, message } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { reqCategory, reqAddProduct } from '../../../../api'
+import { reqCategory, reqAddProduct, reqUpdateProduct } from '../../../../api'
 import UploadImg from './component/upload-img'
 import RichTextEditor from './component/rich-text-editor'
 import './index.less'
@@ -12,6 +12,7 @@ export default class AddUpdate extends Component {
   }
   uploadImg = React.createRef()
   editor = React.createRef()
+  AddUpdateForm = React.createRef()
   pageInfo = '商品添加'
   // 返回列表
   goBack = () => {
@@ -66,11 +67,27 @@ export default class AddUpdate extends Component {
       dist.pCategoryId = categoryIds[0]
       dist.categoryId = categoryIds[1]
     }
-    let res = await reqAddProduct(dist)
-    if (res.status === 0) {
-      message.success('操作成功！')
+    if (this.isUpdate) {
+      // 更新商品
+      dist._id = this.product._id
+      let res = await reqUpdateProduct(dist)
+      if (res.status === 0) {
+        message.success('商品更新成功')
+        this.props.history.goBack()
+      } else {
+        message.error('商品更新失败！')
+      }
     } else {
-      message.error('操作失败！')
+      // 添加商品
+      let res = await reqAddProduct(dist)
+      if (res.status === 0) {
+        message.success('商品添加成功')
+        this.AddUpdateForm.current.resetFields()
+        this.editor.current.clear()
+        this.uploadImg.current.clear()
+      } else {
+        message.error('商品添加失败！')
+      }
     }
   }
   UNSAFE_componentWillMount() {
@@ -117,6 +134,7 @@ export default class AddUpdate extends Component {
     return (
       <Card title={title} style={{ width: '100%' }}>
         <Form
+          ref={this.AddUpdateForm}
           name="add-update"
           onFinish={this.onFinish}
           labelCol={{ span: 6 }}

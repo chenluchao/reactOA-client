@@ -64,6 +64,12 @@ export default class UploadImg extends Component {
   getImgs = () => {
     return this.state.fileList.map((file) => file.name)
   }
+  clear = () => {
+    // 置空组件数据
+    this.setState({
+      fileList: [],
+    })
+  }
   componentDidMount() {
     let fileList = []
     const { imgs } = this.props
