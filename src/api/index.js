@@ -3,12 +3,12 @@
 */
 import ajax from './ajax'
 import jsonp from 'jsonp'
-import {message} from 'antd';
+import { message } from 'antd'
 
 const base_URL = '/manage'
 // 登录
 export function reqLogin(data) {
-  return ajax('/login', data,'POST')
+  return ajax('/login', data, 'POST')
 }
 // jsonp跨域请求天气数据
 export const reqWeather = (city) => {
@@ -26,25 +26,29 @@ export const reqWeather = (city) => {
 }
 // 获取分类列表数据
 export function reqCategory(data) {
-  return ajax(base_URL + '/category/list',data)
+  return ajax(base_URL + '/category/list', data)
 }
 // 添加商品分类
 export function reqAddCategory(data) {
-  return ajax(base_URL + '/category/add', data,'POST')
+  return ajax(base_URL + '/category/add', data, 'POST')
 }
 // 更新分类
 export function reqUpdateCategory(data) {
-  return ajax(base_URL + '/category/update', data,'POST')
+  return ajax(base_URL + '/category/update', data, 'POST')
 }
 // 获取商品分页数据
 export function reqProducts(data) {
-  return ajax(base_URL + '/product/list',data)
+  return ajax(base_URL + '/product/list', data)
 }
 // 上架/下架
 export function reqUpdateStatus(data) {
-  return ajax(base_URL + '/product/updateStatus',data,'POST')
+  return ajax(base_URL + '/product/updateStatus', data, 'POST')
 }
 // 搜索商品
 export function reqSearchProducts(data) {
-  return ajax(base_URL + '/product/search',data)
+  return ajax(base_URL + '/product/search', data)
+}
+// 删除指定名称的图片
+export function reqDeleteImg(data) {
+  return ajax('/manage/img/delete', data, 'POST')
 }

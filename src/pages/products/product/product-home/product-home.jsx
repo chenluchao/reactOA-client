@@ -151,8 +151,10 @@ export default class ProductHome extends Component {
       message.error('获取数据失败，请稍后重试！')
     }
   }
-  // 点击添加按钮回调
-  addProtuct = () => {}
+  // 点击添加商品按钮回调
+  addProtuct = () => {
+    this.props.history.push('/product/addupdate')
+  }
   // 上架/下架操作
   changeStatus = (status, product) => {
     let _this = this
