@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Timeline } from 'antd'
-import { ClockCircleOutlined, SmileOutlined } from '@ant-design/icons'
+import { SmileOutlined } from '@ant-design/icons'
 export default class TimeLineCom extends Component {
   render() {
     return (

@@ -4,7 +4,6 @@ import ProductHome from './product-home/product-home'
 import ProductDetail from './product-detail/product-detail'
 import ProductAddUpdate from './product-addupdate/product-addupdate'
 import Loading from '../../../components/loading/loading'
-import './index.less'
 
 export default class Products extends Component {
   render() {

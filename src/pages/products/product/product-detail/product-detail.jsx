@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Card, Button, List, Image } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { BASE_IMG_URL } from '../../../../utils/constants'
-import './index.less'
 export default class Detail extends Component {
   state = {
     productDetailArr: [],

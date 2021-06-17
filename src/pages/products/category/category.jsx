@@ -3,7 +3,6 @@ import { Card, Table, Button, message, Modal, Input, Form, Select } from 'antd'
 import { PlusOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import LinkButton from '../../../components/link-button/link-button'
 import { reqCategory, reqUpdateCategory,reqAddCategory } from '../../../api'
-import './index.less'
 const { Option } = Select
 export default class Category extends Component {
   state = {

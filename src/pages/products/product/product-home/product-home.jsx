@@ -16,7 +16,6 @@ import {
   reqUpdateStatus,
   reqSearchProducts,
 } from '../../../../api'
-import './index.less'
 const { Option } = Select
 const { confirm } = Modal
 export default class ProductHome extends Component {
