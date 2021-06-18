@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Modal } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import './index.less'
 import memoryUtils from '../../utils/memoryUtils'
 import menuList from '../../config/menuConfig'
 import storageUtils from '../../utils/storageUtils'
 import { formateDate } from '../../utils/dateUtils'
-import {reqWeather} from '../../api'
+import { reqWeather } from '../../api'
 import LinkButton from '../../components/link-button/link-button'
 const { confirm } = Modal
 class Header extends Component {
   state = {
-    CurrentTime:'',
-    WeatherName:'',
-    WeatherTemp:''
+    CurrentTime: '',
+    WeatherName: '',
+    WeatherTemp: '',
   }
   // 获取当前路由的名称
   getCurrentTitle = () => {
@@ -24,7 +24,9 @@ class Header extends Component {
       if (item.key === path) {
         title = item.title
       } else if (item.children) {
-        const cItem = item.children.find((cItem) => cItem.key === path)
+        const cItem = item.children.find(
+          (cItem) => path.indexOf(cItem.key) === 0
+        )
         if (cItem) {
           title = cItem.title
         }
@@ -36,34 +38,34 @@ class Header extends Component {
     this.DateTime = setInterval(() => {
       let CurrentTime = formateDate(Date.now())
       this.setState({
-        CurrentTime
+        CurrentTime,
       })
     }, 1000)
   }
-  getWeather=async (city)=>{
-    const {weather} = await reqWeather(city)
-    console.log('weather',weather)
+  getWeather = async (city) => {
+    const { weather } = await reqWeather(city)
+    console.log('weather', weather)
     this.setState({
-      WeatherName:weather.type,
-      WeatherTemp:weather.high+'——'+weather.low
+      WeatherName: weather.type,
+      WeatherTemp: weather.high + '——' + weather.low,
     })
   }
   // 退出登录
-  logout=()=>{
+  logout = () => {
     const _this = this
     confirm({
       title: '您是否确认退出登录',
-      cancelText:'取消',
-      okText:'确认',
+      cancelText: '取消',
+      okText: '确认',
       icon: <ExclamationCircleOutlined />,
       content: '退出登录将删除您的登录信息！',
       onOk() {
-        memoryUtils.user={}
+        memoryUtils.user = {}
         storageUtils.removeUser()
         _this.props.history.replace('/login')
       },
       onCancel() {},
-    });
+    })
   }
   componentDidMount() {
     // 启动定时器实时获取时间
@@ -71,19 +73,24 @@ class Header extends Component {
     // 获取天气
     this.getWeather('北京')
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     // 销毁前清除定时器
     // clearInterval(this.DateTime)
   }
   render() {
     const { user } = memoryUtils
     const title = this.getCurrentTitle()
-    const {CurrentTime,WeatherName,WeatherTemp} = this.state
+    const { CurrentTime, WeatherName, WeatherTemp } = this.state
     return (
       <div className="header">
         <div className="header-top">
           <span>欢迎，{user.username}</span>
-          <LinkButton onClick={this.logout} type="text" danger children={'退出'}></LinkButton>
+          <LinkButton
+            onClick={this.logout}
+            type="text"
+            danger
+            children={'退出'}
+          ></LinkButton>
         </div>
         <div className="header-bottom">
           <div className="path-name">{title}</div>
