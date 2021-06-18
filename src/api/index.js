@@ -60,3 +60,11 @@ export function reqAddProduct(data) {
 export function reqUpdateProduct(data) {
   return ajax(base_URL + '/product/update', data, 'POST')
 }
+// 获取角色列表
+export function reqRoleList() {
+  return ajax(base_URL + '/role/list')
+}
+// 添加角色
+export function reqAddRole(data) {
+  return ajax(base_URL + '/role/add', data, 'POST')
+}
