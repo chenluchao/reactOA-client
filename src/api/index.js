@@ -68,3 +68,7 @@ export function reqRoleList() {
 export function reqAddRole(data) {
   return ajax(base_URL + '/role/add', data, 'POST')
 }
+// 更新角色
+export function reqUpdateRole(data) {
+  return ajax(base_URL + '/role/update', data, 'POST')
+}

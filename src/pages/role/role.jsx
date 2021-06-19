@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Card, Button, Table, message } from 'antd'
 import { reqRoleList } from '../../api'
 import AddRoleForm from './add-form'
+import UpdateRoleForm from './update-form'
+import { formateDate } from '../../utils/dateUtils'
 import './index.less'
 
 export default class Role extends Component {
@@ -10,6 +12,7 @@ export default class Role extends Component {
     dataSource: [],
     role: {}, //选中的角色对象
     showAddRole: false,
+    showUpdateRole: false,
   }
   getRoleList = async () => {
     let res = await reqRoleList()
@@ -44,8 +47,20 @@ export default class Role extends Component {
       this.getRoleList()
     }
   }
+  // 展开/关闭设置角色权限弹窗
+  toggleUpdateRole = (type = false) => {
+    //type-是否刷新列表数据
+    const { showUpdateRole } = this.state
+    this.setState({
+      showUpdateRole: !showUpdateRole,
+    })
+    if (type) {
+      this.getRoleList()
+    }
+  }
   render() {
-    const { loading, dataSource, role, showAddRole } = this.state
+    const { loading, dataSource, role, showAddRole, showUpdateRole } =
+      this.state
     const title = (
       <>
         <Button
@@ -55,7 +70,11 @@ export default class Role extends Component {
         >
           添加角色
         </Button>
-        <Button type="primary" disabled={!role._id}>
+        <Button
+          type="primary"
+          disabled={!role._id}
+          onClick={() => this.toggleUpdateRole(false)}
+        >
           设置角色权限
         </Button>
       </>
@@ -68,10 +87,12 @@ export default class Role extends Component {
       {
         title: '创建时间',
         dataIndex: 'create_time',
+        render: (create_time) => formateDate(create_time),
       },
       {
         title: '授权时间',
         dataIndex: 'auth_time',
+        render: formateDate,
       },
       {
         title: '授权人',
@@ -96,6 +117,11 @@ export default class Role extends Component {
           onRow={this.clickRow}
         />
         <AddRoleForm isShow={showAddRole} toggleShow={this.toggleAddRole} />
+        <UpdateRoleForm
+          isShow={showUpdateRole}
+          toggleShow={this.toggleUpdateRole}
+          role={role}
+        />
       </Card>
     )
   }
