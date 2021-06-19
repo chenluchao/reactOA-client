@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Card, Button, Table, message } from 'antd'
-import { reqUsersList } from '../../api'
+import { Card, Button, Table, message, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { reqUsersList, reqDeleteUser } from '../../api'
 import { formateDate } from '../../utils/dateUtils'
 import AddUpdateUser from './add-update'
+const { confirm } = Modal
 export default class User extends Component {
   state = {
     dataSource: [],
@@ -42,6 +44,37 @@ export default class User extends Component {
       message.error('获取用户列表数据失败！')
     }
   }
+  // 删除用户
+  deleteUser = (user) => {
+    const _this = this
+    confirm({
+      title: '您确定要删除该用户吗？',
+      icon: <ExclamationCircleOutlined />,
+      content: '删除后该用户的一切信息将不可恢复！',
+      okText: '删除',
+      okButtonProps: {
+        type: 'primary',
+        danger: true,
+      },
+      cancelText: '取消',
+      async onOk() {
+        let dist = {
+          userId: user._id,
+        }
+        const res = await reqDeleteUser(dist)
+        if (res.status === 0) {
+          message.success(
+            <span>
+              用户：<b style={{ color: '#ff4d4f' }}>{user.username}</b>已删除！
+            </span>
+          )
+          _this.getUserList()
+        } else {
+          message.error('删除用户失败！')
+        }
+      },
+    })
+  }
   componentDidMount() {
     this.getUserList()
   }
@@ -70,7 +103,7 @@ export default class User extends Component {
       {
         title: '注册时间',
         dataIndex: 'create_time',
-        key:'create_time',
+        key: 'create_time',
         render: formateDate,
       },
       {
@@ -83,7 +116,9 @@ export default class User extends Component {
         render: (user) => (
           <span>
             <Button type="link">修改</Button>
-            <Button type="link">删除</Button>
+            <Button type="link" onClick={() => this.deleteUser(user)}>
+              删除
+            </Button>
           </span>
         ),
       },

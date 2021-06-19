@@ -80,3 +80,7 @@ export function reqUsersList() {
 export function reqAddUser(data) {
   return ajax(base_URL + '/user/add', data, 'POST')
 }
+// 删除用户
+export function reqDeleteUser(data) {
+  return ajax(base_URL + '/user/delete', data, 'POST')
+}
