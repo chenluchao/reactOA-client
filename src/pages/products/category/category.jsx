@@ -235,10 +235,10 @@ export default class Category extends Component {
                 },
               ]}
             >
-              <Select defaultValue="0" style={{ width: '100%' }}>
-                <Option value="0">一级分类</Option>
+              <Select style={{ width: '100%' }}>
+                <Option value="0" key='0'>一级分类</Option>
                 {categoryList.map((item) => {
-                  return <Option value={item._id}>{item.name}</Option>
+                  return <Option key={item._id} value={item._id}>{item.name}</Option>
                 })}
               </Select>
             </Form.Item>
