@@ -72,3 +72,11 @@ export function reqAddRole(data) {
 export function reqUpdateRole(data) {
   return ajax(base_URL + '/role/update', data, 'POST')
 }
+// 获取用户列表
+export function reqUsersList() {
+  return ajax(base_URL + '/user/list')
+}
+// 添加用户
+export function reqAddUser(data) {
+  return ajax(base_URL + '/user/add', data, 'POST')
+}
