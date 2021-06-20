@@ -3,7 +3,9 @@ import { Modal, Form, Input, message, Tree } from 'antd'
 import { reqUpdateRole } from '../../api'
 import menuList from '../../config/menuConfig'
 import memoryUtils from '../../utils/memoryUtils'
-export default class UpdateForm extends Component {
+import storageUtils from '../../utils/storageUtils'
+import { withRouter } from 'react-router-dom'
+class UpdateForm extends Component {
   constructor(props) {
     super(props)
     const { menus } = this.props.role
@@ -39,8 +41,16 @@ export default class UpdateForm extends Component {
       dist.menus = this.state.checkedKeys
       let res = await reqUpdateRole(dist)
       if (res.status === 0) {
-        message.success('设置角色权限成功！')
-        this.handleCancel(true)
+        // 如果是当前更新的是自己的角色，强制退出
+        if (dist._id === memoryUtils.user.role_id) {
+          memoryUtils.user = {}
+          storageUtils.removeUser()
+          message.warning('当前用户角色权限已更新，请重新登录！')
+          this.props.history.replace('/login')
+        } else {
+          message.success('设置角色权限成功！')
+          this.handleCancel(true)
+        }
       } else {
         message.error('设置角色权限失败！')
       }
@@ -91,3 +101,4 @@ export default class UpdateForm extends Component {
     )
   }
 }
+export default withRouter(UpdateForm)
