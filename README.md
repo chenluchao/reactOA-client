@@ -1,14 +1,14 @@
-# 分子说明
+# 分支说明
 
-## master分子
+## master分支
 
 主分支
 
-## dev
+## dev分支
 
 未使用redux开发版本
 
-## dev-optimize
+## dev-optimize分支
 
 使用redux进行开发版本
 
