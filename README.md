@@ -1,10 +1,21 @@
-# Getting Started with Create React App
+# 分子说明
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## master分子
 
-## Available Scripts
+主分支
 
-In the project directory, you can run:
+## dev
+
+未使用redux开发版本
+
+## dev-optimize
+
+使用redux进行开发版本
+
+
+
+
+# react实战练习项目运行说明
 
 ### `yarn start`
 
