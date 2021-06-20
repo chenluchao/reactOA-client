@@ -113,6 +113,11 @@ export default class Role extends Component {
           rowSelection={{
             type: 'radio',
             selectedRowKeys: [role._id], //显示选中
+            onSelect: (role) => {
+              this.setState({
+                role,
+              })
+            },
           }}
           onRow={this.clickRow}
         />
