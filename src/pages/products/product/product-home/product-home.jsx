@@ -102,6 +102,7 @@ export default class ProductHome extends Component {
     if (values.searchInput) {
       this.setState(
         {
+          pageNum: 1,
           showSearch: true,
           searchType: values.searchType,
           searchCon: values.searchInput,
