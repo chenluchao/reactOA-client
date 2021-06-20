@@ -44,6 +44,17 @@ export default class User extends Component {
       message.error('获取用户列表数据失败！')
     }
   }
+  // 创建用户
+  addUser = () => {
+    this.setState(
+      {
+        user: {},
+      },
+      () => {
+        this.toggleModal()
+      }
+    )
+  }
   // 删除用户
   deleteUser = (user) => {
     const _this = this
@@ -75,12 +86,23 @@ export default class User extends Component {
       },
     })
   }
+  // 修改用户
+  updateUser = (user) => {
+    this.setState(
+      {
+        user,
+      },
+      () => {
+        this.toggleModal()
+      }
+    )
+  }
   componentDidMount() {
     this.getUserList()
   }
   render() {
     const title = (
-      <Button type="primary" onClick={() => this.toggleModal(false)}>
+      <Button type="primary" onClick={this.addUser}>
         创建用户
       </Button>
     )
@@ -115,7 +137,9 @@ export default class User extends Component {
         title: '操作',
         render: (user) => (
           <span>
-            <Button type="link">修改</Button>
+            <Button type="link" onClick={() => this.updateUser(user)}>
+              修改
+            </Button>
             <Button type="link" onClick={() => this.deleteUser(user)}>
               删除
             </Button>

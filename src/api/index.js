@@ -84,3 +84,7 @@ export function reqAddUser(data) {
 export function reqDeleteUser(data) {
   return ajax(base_URL + '/user/delete', data, 'POST')
 }
+// 更新用户
+export function reqUpdateUser(data) {
+  return ajax(base_URL + '/user/update', data, 'POST')
+}
