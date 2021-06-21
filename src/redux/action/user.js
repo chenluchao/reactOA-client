@@ -1,0 +1,47 @@
+import { reqLogin } from '../../api'
+import storageUtils from '../../utils/storageUtils'
+import { RECEIVE_USER, RESET_USER, SHOW_ERROR_MSG } from '../constant'
+
+/* 
+  同步action
+*/
+
+//存储用户
+export const saveUser = (data) => ({ type: RECEIVE_USER, data })
+// 清除用户
+export const resetUser = (data) => ({ type: RESET_USER, data })
+// 显示错误信息同步action
+export const showErrorMsg = (errorMsg) => ({ type: SHOW_ERROR_MSG, errorMsg })
+// 退出登陆的同步action
+export const logout = () => {
+  // 删除local中的user
+  storageUtils.removeUser()
+  // 返回action对象
+  return { type: RESET_USER }
+}
+
+/* 
+  异步action
+*/
+
+// 登录
+export const login = (username, password) => {
+  return async (dispatch) => {
+    // 1. 执行异步的ajax 请求
+    const result = await reqLogin(username, password)
+    // 可能返回结果
+    // {status: 0, data: user} {status: 1, msg: 'xxx'}
+    if (result.status === 0) {
+      // 2.1. 如果成功, 分发成功的同步action
+      const user = result.data
+      // 保存到local中
+      storageUtils.saveUser(user)
+      // 分发接收用户的同步action
+      dispatch(saveUser(user))
+    } else {
+      // 2.2. 如果失败, 分发失败的同步action
+      const msg = result.msg
+      dispatch(showErrorMsg(msg))
+    }
+  }
+}

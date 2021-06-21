@@ -1,38 +1,21 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { logout } from '../../redux/action/user'
 import { Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import './index.less'
-import memoryUtils from '../../utils/memoryUtils'
-import menuList from '../../config/menuConfig'
-import storageUtils from '../../utils/storageUtils'
 import { formateDate } from '../../utils/dateUtils'
 import { reqWeather } from '../../api'
 import LinkButton from '../../components/link-button/link-button'
 const { confirm } = Modal
+
+// UI组件
 class Header extends Component {
   state = {
     CurrentTime: '',
     WeatherName: '',
     WeatherTemp: '',
-  }
-  // 获取当前路由的名称
-  getCurrentTitle = () => {
-    let title
-    const path = this.props.location.pathname
-    menuList.forEach((item) => {
-      if (item.key === path) {
-        title = item.title
-      } else if (item.children) {
-        const cItem = item.children.find(
-          (cItem) => path.indexOf(cItem.key) === 0
-        )
-        if (cItem) {
-          title = cItem.title
-        }
-      }
-    })
-    return title
   }
   showTime = () => {
     this.DateTime = setInterval(() => {
@@ -60,9 +43,8 @@ class Header extends Component {
       icon: <ExclamationCircleOutlined />,
       content: '退出登录将删除您的登录信息！',
       onOk() {
-        memoryUtils.user = {}
-        storageUtils.removeUser()
-        _this.props.history.replace('/login')
+        _this.props.logout()
+        // _this.props.history.replace('/login')
       },
       onCancel() {},
     })
@@ -78,8 +60,7 @@ class Header extends Component {
     // clearInterval(this.DateTime)
   }
   render() {
-    const { user } = memoryUtils
-    const title = this.getCurrentTitle()
+    const { title,user } = this.props
     const { CurrentTime, WeatherName, WeatherTemp } = this.state
     return (
       <div className="header">
@@ -104,4 +85,7 @@ class Header extends Component {
     )
   }
 }
-export default withRouter(Header)
+// 容器组件
+export default connect((state) => ({ title: state.title, user: state.user }), {
+  logout,
+})(withRouter(Header))

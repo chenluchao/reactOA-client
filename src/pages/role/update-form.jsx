@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Modal, Form, Input, message, Tree } from 'antd'
 import { reqUpdateRole } from '../../api'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { logout } from '../../redux/action/user'
 class UpdateForm extends Component {
   constructor(props) {
     super(props)
@@ -37,16 +37,15 @@ class UpdateForm extends Component {
   handleUpdateOk = () => {
     this.updateRole.current.validateFields().then(async (values) => {
       let dist = this.props.role
-      dist.auth_name = memoryUtils.user.username
+      dist.auth_name = this.props.user.username
       dist.menus = this.state.checkedKeys
       let res = await reqUpdateRole(dist)
       if (res.status === 0) {
         // 如果是当前更新的是自己的角色，强制退出
-        if (dist._id === memoryUtils.user.role_id) {
-          memoryUtils.user = {}
-          storageUtils.removeUser()
+        if (dist._id === this.props.user.role_id) {
+          this.props.logout()
           message.warning('当前用户角色权限已更新，请重新登录！')
-          this.props.history.replace('/login')
+          // this.props.history.replace('/login')
         } else {
           message.success('设置角色权限成功！')
           this.handleCancel(true)
@@ -101,4 +100,7 @@ class UpdateForm extends Component {
     )
   }
 }
-export default withRouter(UpdateForm)
+// 容器组件
+export default connect((state) => ({ user: state.user }), {
+  logout,
+})(withRouter(UpdateForm))

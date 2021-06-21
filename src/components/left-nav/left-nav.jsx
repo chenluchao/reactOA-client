@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 import { Menu } from 'antd'
 import * as Icon from '@ant-design/icons'
 import './index.less'
 import menuList from '../../config/menuConfig'
-import memoryUtils from '../../utils/memoryUtils'
 import Logo from '../../assets/images/logo.png'
+import { saveTitle } from '../../redux/action/title'
 const { SubMenu } = Menu
+
+// UI组件
 class LeftNav extends Component {
   getMenuListDOM_map = (menuList) => {
     return menuList.map((item) => {
@@ -31,21 +34,26 @@ class LeftNav extends Component {
     })
   }
   getMenuListDOM = (menuList) => {
+    const currentPath = this.props.location.pathname
     return menuList.reduce((pre, item) => {
       // 如果当前用户有item的访问权限，展示相应的路由
       if (this.hasAuth(item)) {
         const icon = React.createElement(Icon[item.icon], {
           style: { fontSize: '16px' },
         })
+        // 判断item是否是当前对应的item
+        if (item.key === currentPath || currentPath.indexOf(item.key) === 0) {
+          // 更新redux中的headerTitle状态
+            this.props.saveTitle(item.title)
+        }
         if (!item.children) {
           // 无子路由
           pre.push(
-            <Menu.Item key={item.key} icon={icon}>
+            <Menu.Item key={item.key} icon={icon} onClick={() => this.props.saveTitle(item.title)}>
               <Link to={item.key}>{item.title}</Link>
             </Menu.Item>
           )
         } else {
-          const currentPath = this.props.location.pathname
           // if解决/product/detail类似三级路由相关nav不展开问题
           if (currentPath.indexOf('/product') > -1) {
             this.openKey = '/products'
@@ -74,9 +82,10 @@ class LeftNav extends Component {
   }
   // 判断当前用户对路由的权限
   hasAuth = (item) => {
+    const {user} = this.props
     const { key, isPublic } = item
-    const menus = memoryUtils.user.role.menus
-    const { username } = memoryUtils.user
+    const {username} = user
+    const {menus} = user.role
     /* 
       1、如果当前是admin
       2、当前item是公开的
@@ -113,4 +122,7 @@ class LeftNav extends Component {
     )
   }
 }
-export default withRouter(LeftNav)
+// 容器组件
+export default connect((state) => ({ user: state.user }), { saveTitle })(
+  withRouter(LeftNav)
+)

@@ -1,33 +1,23 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
 import './login.less'
 // 登录路由组件
 import LoginIcon from '../../assets/images/logo.png'
-import { reqLogin } from '../../api'
 import { Redirect } from 'react-router'
-export default class Login extends Component {
+// redux
+import { connect } from 'react-redux'
+import { login } from '../../redux/action/user'
+
+// UI组件
+class Login extends Component {
   onFinish = async (values) => {
-    try {
-      const { status, data, msg } = await reqLogin(values)
-      if (status === 0) {
-        message.success('登录成功')
-        memoryUtils.user = data
-        storageUtils.saveUser(data)
-        this.props.history.replace('/')
-      } else {
-        message.error(msg)
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    this.props.login(values)
   }
   render() {
-    const {user} = memoryUtils
-    if(user._id){
-      return <Redirect to='/'/>
+    const { user } = this.props
+    if (user._id) {
+      return <Redirect to="/" />
     }
     return (
       <div className="LoginPage">
@@ -88,3 +78,8 @@ export default class Login extends Component {
     )
   }
 }
+
+// 容器组件
+export default connect((state) => ({ user: state.user }), {
+  login,
+})(Login)
