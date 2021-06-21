@@ -2,6 +2,7 @@
   该文件用于创建一个为组件服务的reducer,reducer本质是一个函数
   reducer函数会接收两个参数；分别是：之前的状态(preState),动作对象(action)
 */
+import {message} from 'antd'
 import storageUtils from '../../utils/storageUtils'
 import { RECEIVE_USER, RESET_USER, SHOW_ERROR_MSG } from '../constant'
 
@@ -17,7 +18,8 @@ export default function userReduser(preState = userInit, action) {
       return {}
     case SHOW_ERROR_MSG:
       const errorMsg = action.errorMsg
-      return { ...preState, errorMsg } // 在原有数据的基础上扩展数据
+      message.error(errorMsg)
+      return {} // 在原有数据的基础上扩展数据
     default:
       //初始化
       return preState
