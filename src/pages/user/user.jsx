@@ -4,6 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { reqUsersList, reqDeleteUser } from '../../api'
 import { formateDate } from '../../utils/dateUtils'
 import AddUpdateUser from './add-update'
+import AuthWrapper from '../../components/hoc/hoc_button'
 const { confirm } = Modal
 export default class User extends Component {
   state = {
@@ -102,9 +103,11 @@ export default class User extends Component {
   }
   render() {
     const title = (
-      <Button type="primary" onClick={this.addUser}>
-        创建用户
-      </Button>
+      <AuthWrapper functionName="权限按钮唯一标识">
+        <Button type="primary" onClick={this.addUser}>
+          创建用户
+        </Button>
+      </AuthWrapper>
     )
     const columns = [
       {
